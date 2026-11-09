@@ -988,134 +988,318 @@
     renderLeagues("featuredLeagues");
     renderLeagues("allLeagues");
   </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.5;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 20px 0;
+    }
+    input, textarea, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0b1220;
+      color: #f8fafc;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      background: #2563eb;
+      border: none;
+      font-weight: bold;
+    }
+    button.secondary {
+      background: #475569;
+    }
+    .hidden {
+      display: none;
+    }
+    .team-item, .league-item {
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>BSA</h1>
 
-<script>
-  const supabaseUrl = "https://hxyaixaarceykrqfford.supabase.co";
-  const supabaseKey = "sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  <div class="card">
+    <h2>Request a Team</h2>
+    <form id="teamRequestForm">
+      <input id="teamNameInput" type="text" placeholder="Team name" />
+      <input id="captainInput" type="text" placeholder="Captain name" />
+      <input id="teamLeagueInput" type="text" placeholder="League name" />
+      <textarea id="playersInput" rows="5" placeholder="Players (one per line or comma separated)"></textarea>
+      <button type="button" onclick="submitTeamRequest()">Send Team Request</button>
+    </form>
+  </div>
 
-  async function loginAdmin() {
-    const email = document.getElementById("adminEmail").value.trim();
-    const password = document.getElementById("adminPassword").value;
+  <div class="card">
+    <h2>Request a New League</h2>
+    <form id="leagueRequestForm">
+      <input id="leagueGameInput" type="text" placeholder="Game name" />
+      <input id="leagueEmailInput" type="email" placeholder="Your email (optional)" />
+      <textarea id="leagueNotesInput" rows="5" placeholder="Details / notes"></textarea>
+      <button type="button" onclick="submitLeagueRequest()">Send League Request</button>
+    </form>
+  </div>
 
-    if (!email || !password) {
-      alert("Enter your email and password.");
-      return;
+  <div id="loginPanel" class="card">
+    <h2>Admin Login</h2>
+    <input id="adminEmail" type="email" placeholder="Admin email" />
+    <input id="adminPassword" type="password" placeholder="Admin password" />
+    <button type="button" onclick="loginAdmin()">Login</button>
+  </div>
+
+  <div id="adminPanel" class="card hidden">
+    <h2>Admin Panel</h2>
+    <p>Only your account can see this panel.</p>
+
+    <h3>Approved Teams</h3>
+    <div id="approvedTeamsList"></div>
+
+    <h3>Pending Team Requests</h3>
+    <div id="pendingTeamsList"></div>
+
+    <h3>League Requests</h3>
+    <div id="leagueRequestsList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://hxyaixaarceykrqfford.supabase.co";
+    const supabaseKey = "sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const ADMIN_EMAIL = "starlord_@tutamail.com";
+
+    async function loginAdmin() {
+      const email = document.getElementById("adminEmail").value.trim();
+      const password = document.getElementById("adminPassword").value;
+
+      if (!email || !password) {
+        alert("Please enter your email and password.");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        alert("Login failed: " + error.message);
+        return;
+      }
+
+      if (data.user.email !== ADMIN_EMAIL) {
+        alert("This account is not allowed to manage the site.");
+        await supabase.auth.signOut();
+        return;
+      }
+
+      document.getElementById("loginPanel").classList.add("hidden");
+      document.getElementById("adminPanel").classList.remove("hidden");
+
+      loadApprovedTeams();
+      loadPendingTeams();
+      loadLeagueRequests();
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+    async function submitTeamRequest() {
+      const teamName = document.getElementById("teamNameInput").value.trim();
+      const captain = document.getElementById("captainInput").value.trim();
+      const league = document.getElementById("teamLeagueInput").value.trim();
+      const playersText = document.getElementById("playersInput").value;
 
-    if (error) {
-      alert("Login failed: " + error.message);
-      return;
+      if (!teamName || !captain || !league) {
+        alert("Please fill in the team name, captain, and league.");
+        return;
+      }
+
+      const players = (playersText || "")
+        .split(/[,\n]/)
+        .map(v => v.trim())
+        .filter(Boolean);
+
+      const { error } = await supabase
+        .from("teams")
+        .insert([
+          {
+            name: teamName,
+            captain,
+            league,
+            players,
+            wins: 0,
+            losses: 0,
+            approved: false
+          }
+        ]);
+
+      if (error) {
+        alert("Could not submit team request: " + error.message);
+        return;
+      }
+
+      alert("Team request sent.");
+      document.getElementById("teamRequestForm").reset();
     }
 
-    if (data.user.email !== "starlord_@tutamail.com") {
-      alert("This account is not allowed to manage the site.");
-      await supabase.auth.signOut();
-      return;
+    async function submitLeagueRequest() {
+      const gameName = document.getElementById("leagueGameInput").value.trim();
+      const email = document.getElementById("leagueEmailInput").value.trim();
+      const notes = document.getElementById("leagueNotesInput").value.trim();
+
+      if (!gameName) {
+        alert("Please enter the game name.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("league_requests")
+        .insert([
+          {
+            game_name: gameName,
+            email,
+            notes
+          }
+        ]);
+
+      if (error) {
+        alert("Could not submit league request: " + error.message);
+        return;
+      }
+
+      alert("League request sent.");
+      document.getElementById("leagueRequestForm").reset();
     }
 
-    document.getElementById("loginPanel").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    alert("Admin access granted.");
-  }
+    async function loadApprovedTeams() {
+      const { data, error } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("approved", true)
+        .order("name");
 
-  async function submitTeamRequest() {
-    const teamName = document.getElementById("teamNameInput").value.trim();
-    const captain = document.getElementById("captainInput").value.trim();
-    const league = document.getElementById("teamLeagueInput").value.trim();
-    const players = (document.getElementById("playersInput").value || "")
-      .split(/[,\n]/)
-      .map(v => v.trim())
-      .filter(Boolean);
+      const list = document.getElementById("approvedTeamsList");
 
-    if (!teamName || !captain || !league) {
-      alert("Please fill in team name, captain, and league.");
-      return;
+      if (error) {
+        list.innerHTML = "<p>Unable to load approved teams.</p>";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.innerHTML = "<p>No approved teams yet.</p>";
+        return;
+      }
+
+      list.innerHTML = data.map(team => `
+        <div class="team-item">
+          <strong>${team.name}</strong><br>
+          Captain: ${team.captain || "N/A"}<br>
+          League: ${team.league || "N/A"}
+        </div>
+      `).join("");
     }
 
-    const { error } = await supabase
-      .from("teams")
-      .insert([
-        {
-          name: teamName,
-          captain,
-          league,
-          players,
-          wins: 0,
-          losses: 0,
-          approved: false
-        }
-      ]);
+    async function loadPendingTeams() {
+      const { data, error } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("approved", false)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      alert("Could not submit team request: " + error.message);
-      return;
+      const list = document.getElementById("pendingTeamsList");
+
+      if (error) {
+        list.innerHTML = "<p>Unable to load pending teams.</p>";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.innerHTML = "<p>No pending team requests.</p>";
+        return;
+      }
+
+      list.innerHTML = data.map(team => `
+        <div class="team-item">
+          <strong>${team.name}</strong><br>
+          Captain: ${team.captain || "N/A"}<br>
+          League: ${team.league || "N/A"}<br>
+          Players: ${(team.players || []).join(", ") || "N/A"}<br>
+          <button class="secondary" type="button" onclick="approveTeam('${team.id}')">Approve</button>
+        </div>
+      `).join("");
     }
 
-    alert("Request submitted.");
-    document.getElementById("teamRequestForm").reset();
-  }
+    async function approveTeam(teamId) {
+      const { error } = await supabase
+        .from("teams")
+        .update({ approved: true })
+        .eq("id", teamId);
 
-  async function submitLeagueRequest() {
-    const gameName = document.getElementById("leagueGameInput").value.trim();
-    const email = document.getElementById("leagueEmailInput").value.trim();
-    const notes = document.getElementById("leagueNotesInput").value.trim();
+      if (error) {
+        alert("Could not approve team: " + error.message);
+        return;
+      }
 
-    if (!gameName) {
-      alert("Enter a game name.");
-      return;
+      loadApprovedTeams();
+      loadPendingTeams();
     }
 
-    const { error } = await supabase
-      .from("league_requests")
-      .insert([
-        {
-          game_name: gameName,
-          email,
-          notes
-        }
-      ]);
+    async function loadLeagueRequests() {
+      const { data, error } = await supabase
+        .from("league_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      alert("Could not submit league request: " + error.message);
-      return;
+      const list = document.getElementById("leagueRequestsList");
+
+      if (error) {
+        list.innerHTML = "<p>Unable to load league requests.</p>";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.innerHTML = "<p>No league requests yet.</p>";
+        return;
+      }
+
+      list.innerHTML = data.map(req => `
+        <div class="league-item">
+          <strong>${req.game_name}</strong><br>
+          Email: ${req.email || "N/A"}<br>
+          Notes: ${req.notes || "N/A"}
+        </div>
+      `).join("");
     }
 
-    alert("League request submitted.");
-    document.getElementById("leagueRequestForm").reset();
-  }
-</script><div id="loginPanel" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
-  <h3>Admin Login</h3>
-  <input id="adminEmail" type="email" placeholder="Admin email">
-  <input id="adminPassword" type="password" placeholder="Admin password">
-  <button type="button" onclick="loginAdmin()">Login</button>
-</div>
-
-<div id="adminPanel" style="display:none; margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
-  <h3>Admin Panel</h3>
-  <p>Only your account can use this section.</p>
-</div>
-
-<form id="teamRequestForm" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
-  <h3>Request a Team</h3>
-  <input id="teamNameInput" type="text" placeholder="Team name">
-  <input id="captainInput" type="text" placeholder="Captain">
-  <input id="teamLeagueInput" type="text" placeholder="League">
-  <textarea id="playersInput" placeholder="Players (one per line or separated by commas)"></textarea>
-  <button type="button" onclick="submitTeamRequest()">Send team request</button>
-</form>
-
-<form id="leagueRequestForm" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
-  <h3>Request a New League</h3>
-  <input id="leagueGameInput" type="text" placeholder="Game name">
-  <input id="leagueEmailInput" type="email" placeholder="Your email (optional)">
-  <textarea id="leagueNotesInput" placeholder="Notes"></textarea>
-  <button type="button" onclick="submitLeagueRequest()">Send league request</button>
-</form></body>
+    // This is a beginner-friendly demonstration.
+    // To make it production-safe, set Supabase RLS policies so only your signed-in account can manage data.
+  </script>
+</body>
+</html></body>
 </html>
