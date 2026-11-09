@@ -988,5 +988,134 @@
     renderLeagues("featuredLeagues");
     renderLeagues("allLeagues");
   </script>
-</body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const supabaseUrl = "https://hxyaixaarceykrqfford.supabase.co";
+  const supabaseKey = "sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  async function loginAdmin() {
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value;
+
+    if (!email || !password) {
+      alert("Enter your email and password.");
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      alert("Login failed: " + error.message);
+      return;
+    }
+
+    if (data.user.email !== "starlord_@tutamail.com") {
+      alert("This account is not allowed to manage the site.");
+      await supabase.auth.signOut();
+      return;
+    }
+
+    document.getElementById("loginPanel").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+    alert("Admin access granted.");
+  }
+
+  async function submitTeamRequest() {
+    const teamName = document.getElementById("teamNameInput").value.trim();
+    const captain = document.getElementById("captainInput").value.trim();
+    const league = document.getElementById("teamLeagueInput").value.trim();
+    const players = (document.getElementById("playersInput").value || "")
+      .split(/[,\n]/)
+      .map(v => v.trim())
+      .filter(Boolean);
+
+    if (!teamName || !captain || !league) {
+      alert("Please fill in team name, captain, and league.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("teams")
+      .insert([
+        {
+          name: teamName,
+          captain,
+          league,
+          players,
+          wins: 0,
+          losses: 0,
+          approved: false
+        }
+      ]);
+
+    if (error) {
+      alert("Could not submit team request: " + error.message);
+      return;
+    }
+
+    alert("Request submitted.");
+    document.getElementById("teamRequestForm").reset();
+  }
+
+  async function submitLeagueRequest() {
+    const gameName = document.getElementById("leagueGameInput").value.trim();
+    const email = document.getElementById("leagueEmailInput").value.trim();
+    const notes = document.getElementById("leagueNotesInput").value.trim();
+
+    if (!gameName) {
+      alert("Enter a game name.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("league_requests")
+      .insert([
+        {
+          game_name: gameName,
+          email,
+          notes
+        }
+      ]);
+
+    if (error) {
+      alert("Could not submit league request: " + error.message);
+      return;
+    }
+
+    alert("League request submitted.");
+    document.getElementById("leagueRequestForm").reset();
+  }
+</script><div id="loginPanel" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
+  <h3>Admin Login</h3>
+  <input id="adminEmail" type="email" placeholder="Admin email">
+  <input id="adminPassword" type="password" placeholder="Admin password">
+  <button type="button" onclick="loginAdmin()">Login</button>
+</div>
+
+<div id="adminPanel" style="display:none; margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
+  <h3>Admin Panel</h3>
+  <p>Only your account can use this section.</p>
+</div>
+
+<form id="teamRequestForm" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
+  <h3>Request a Team</h3>
+  <input id="teamNameInput" type="text" placeholder="Team name">
+  <input id="captainInput" type="text" placeholder="Captain">
+  <input id="teamLeagueInput" type="text" placeholder="League">
+  <textarea id="playersInput" placeholder="Players (one per line or separated by commas)"></textarea>
+  <button type="button" onclick="submitTeamRequest()">Send team request</button>
+</form>
+
+<form id="leagueRequestForm" style="margin:20px 0; padding:20px; border:1px solid #ccc; border-radius:12px;">
+  <h3>Request a New League</h3>
+  <input id="leagueGameInput" type="text" placeholder="Game name">
+  <input id="leagueEmailInput" type="email" placeholder="Your email (optional)">
+  <textarea id="leagueNotesInput" placeholder="Notes"></textarea>
+  <button type="button" onclick="submitLeagueRequest()">Send league request</button>
+</form></body>
 </html>
