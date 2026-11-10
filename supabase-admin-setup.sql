@@ -1,7 +1,7 @@
 -- BSA admin setup
--- First create the admin account in Supabase Dashboard > Authentication > Users.
--- Then replace YOUR_ADMIN_EMAIL below with that account's exact email address and run this whole script.
--- This is safe to rerun. Do not put an account password or service-role key in this file.
+-- Create your admin user first in Supabase Dashboard > Authentication > Users.
+-- Replace the email below with that exact account email, then run this whole script.
+-- Safe to rerun. Do not put an account password or service-role key here.
 
 create table if not exists public.team_requests (
   id bigint generated always as identity primary key,
@@ -22,33 +22,33 @@ create table if not exists public.league_requests (
   created_at timestamptz not null default now()
 );
 
+-- Add optional registration fields to tables created by an earlier version.
+alter table public.team_requests add column if not exists statistician text;
+alter table public.team_requests add column if not exists availability text;
+alter table public.team_requests add column if not exists home_state text;
+alter table public.team_requests add column if not exists team_colors text;
+alter table public.team_requests add column if not exists team_anthem text;
+alter table public.team_requests add column if not exists fan_interactive text;
+alter table public.team_requests add column if not exists notes text;
+
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
 );
 
--- Add the Auth user as an admin by email (not by a guessed/hard-coded user ID).
+-- This project admin email is the one configured for BSA. Change only if needed.
 insert into public.admin_users (user_id)
 select id from auth.users where lower(email) = lower('starlord_@tutamail.com')
 on conflict (user_id) do nothing;
-
--- If the previous statement inserted no row, verify the email exactly matches an existing Auth user.
--- You can check the admin mapping with:
--- select u.email from public.admin_users a join auth.users u on u.id = a.user_id;
 
 alter table public.team_requests enable row level security;
 alter table public.league_requests enable row level security;
 alter table public.admin_users enable row level security;
 
--- Admin membership is never directly readable or writable from the public website.
 revoke all on table public.admin_users from anon, authenticated;
-
--- The public website may submit requests; only an approved signed-in admin may read them.
 grant insert on table public.team_requests, public.league_requests to anon, authenticated;
 grant select on table public.team_requests, public.league_requests to authenticated;
 
--- SECURITY DEFINER lets this narrowly-scoped membership check inspect the admin list
--- without exposing the list or causing an RLS recursion problem.
 create or replace function public.is_bsa_admin()
 returns boolean
 language sql
@@ -65,7 +65,6 @@ $$;
 revoke all on function public.is_bsa_admin() from public, anon;
 grant execute on function public.is_bsa_admin() to authenticated;
 
--- Remove known earlier policy names so this script can be safely rerun.
 drop policy if exists "Anyone can submit a team request" on public.team_requests;
 drop policy if exists "Anyone can submit a league request" on public.league_requests;
 drop policy if exists "admin can read all team requests" on public.team_requests;
