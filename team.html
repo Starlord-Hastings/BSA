@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore a founding BSA team, its story, record, roster, and official anthem.">
+  <title>BSA Team</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#121a2b;--line:#26344c;--text:#f4f7ff;--muted:#aab8cf;--gold:#f2c56b;--blue:#5c8cff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% 0,#1d3768 0,transparent 40%),var(--bg);color:var(--text);font:16px/1.6 system-ui,Arial,sans-serif}.wrap{width:min(980px,calc(100% - 32px));margin:auto}a{color:inherit;text-decoration:none}.top{border-bottom:1px solid var(--line);padding:18px 0}.brand{font-weight:900;letter-spacing:.1em}.brand b{color:var(--gold);margin-right:8px}.hero{padding:72px 0 50px}.eyebrow{font-size:.78rem;color:var(--gold);font-weight:800;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(2.7rem,8vw,5rem);line-height:1;margin:10px 0;letter-spacing:-.055em}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:10px 0 56px}.card{padding:22px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#121a2b,#18243a)}.card h2{margin:0 0 10px}.crest{font-size:3rem}.stat{font-size:1.8rem;font-weight:900;color:var(--gold)}.label{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}.btn{display:inline-block;margin:8px 8px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:9px;background:#ffffff0b;font-weight:750}.btn:hover{border-color:var(--gold)}footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted)}@media(max-width:650px){.grid{grid-template-columns:1fr}.hero{padding-top:52px}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="wrap"><a class="brand" href="index.html#teams"><b>🏆</b>BSA <span class="muted">/ FOUNDING TEAM</span></a></div></header>
+  <main class="wrap"><section class="hero"><div class="eyebrow">BLC · Founding Club</div><div class="crest" id="crest">🏆</div><h1 id="teamName">Team</h1><p class="muted" id="teamSummary"></p><a class="btn" href="index.html#teams">← All teams</a><a class="btn" href="index.html#standings">Season standings</a></section>
+    <section class="grid">
+      <article class="card"><div class="label">Team information</div><h2 id="infoName"></h2><p><b>Captain:</b> <span id="captain"></span></p><p><b>Known for:</b> <span id="known"></span></p><p><b>Official anthem:</b> <span id="anthem"></span></p></article>
+      <article class="card"><div class="label">Team history</div><h2>Founding team</h2><p class="muted">A founding BSA club competing in the inaugural BLC season. Further history and milestones will be added as the season unfolds.</p></article>
+      <article class="card"><div class="label">Season record</div><h2>BLC record</h2><p><span class="stat">—</span> <span class="muted">Wins</span></p><p><span class="stat">—</span> <span class="muted">Losses</span></p><p><span class="stat">—</span> <span class="muted">Championships</span></p><p class="muted">Statistics will be published when official results are available.</p></article>
+      <article class="card"><div class="label">Team logo</div><h2>Club crest</h2><p class="muted">Official team logo artwork coming soon.</p><div id="logoMark" style="font-size:4rem;margin-top:12px">🏆</div></article>
+      <article class="card" style="grid-column:1/-1"><div class="label">Roster</div><h2>Team roster</h2><p id="roster" class="muted">Roster details coming soon.</p></article>
+    </section>
+  </main><footer><div class="wrap">BSA · Bloxd Sporting Association</div></footer>
+  <script>
+    const teams={
+      'cce':{name:'CCE',emoji:'🛡️',anthem:'Hold The Line',known:'Teamwork and Adaptation',captain:'Legend Slayer',roster:'Roster details coming soon.'},
+      'kings-of-mid':{name:'Kings of Mid',emoji:'👑',anthem:'Kings of Mid',known:'Moonstone Control',captain:'Nile',roster:'Roster details coming soon.'},
+      'phoenix-core':{name:'Phoenix Core',emoji:'🔥',anthem:'Burn Again',known:'Explosives',captain:'To be announced',roster:'Roster details coming soon.'},
+      'iron-division':{name:'Iron Division',emoji:'⚔️',anthem:'Steel Command',known:'Discipline and Tactics',captain:'To be announced',roster:'Roster details coming soon.'},
+      'crimson-rush':{name:'Crimson Rush',emoji:'🔴',anthem:'Red Horizon',known:'Power Rushes',captain:'To be announced',roster:'Roster details coming soon.'},
+      'stormbreak':{name:'Stormbreak',emoji:'🌊',anthem:'Ride The Storm',known:'Speed',captain:'To be announced',roster:'Roster details coming soon.'},
+      'void-hunters':{name:'Void Hunters',emoji:'🌑',anthem:'Into The Void',known:'Void Fighting',captain:'To be announced',roster:'Roster details coming soon.'},
+      'skyfall':{name:'Skyfall',emoji:'⚡',anthem:'Touch The Sky',known:'Height Advantage',captain:'To be announced',roster:'Roster details coming soon.'}
+    };
+    const slug=new URLSearchParams(location.search).get('team');const team=teams[slug]||null;
+    if(team){document.title=`${team.name} | BSA`;document.getElementById('crest').textContent=team.emoji;document.getElementById('logoMark').textContent=team.emoji;document.getElementById('teamName').textContent=team.name;document.getElementById('teamSummary').textContent=`${team.known} · BLC Founding Team`;document.getElementById('infoName').textContent=team.name;document.getElementById('captain').textContent=team.captain;document.getElementById('known').textContent=team.known;document.getElementById('anthem').textContent=team.anthem;document.getElementById('roster').textContent=team.roster;}
+    else{document.title='Team not found | BSA';document.getElementById('teamName').textContent='Team not found';document.getElementById('teamSummary').textContent='Please return to the founding teams list and choose a team.';document.getElementById('infoName').textContent='No team selected';}
+  </script>
+</body>
+</html>
