@@ -29,7 +29,7 @@ create table if not exists public.admin_users (
 
 -- Add the Auth user as an admin by email (not by a guessed/hard-coded user ID).
 insert into public.admin_users (user_id)
-select id from auth.users where lower(email) = lower('YOUR_ADMIN_EMAIL')
+select id from auth.users where lower(email) = lower('starlord_@tutamail.com')
 on conflict (user_id) do nothing;
 
 -- If the previous statement inserted no row, verify the email exactly matches an existing Auth user.
