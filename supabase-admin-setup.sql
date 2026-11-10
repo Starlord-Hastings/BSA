@@ -1,6 +1,5 @@
 -- BSA admin setup
--- Create your admin user first in Supabase Dashboard > Authentication > Users.
--- Replace the email below with that exact account email, then run this whole script.
+-- This script creates/updates request tables and grants the configured BSA admin access.
 -- Safe to rerun. Do not put an account password or service-role key here.
 
 create table if not exists public.team_requests (
@@ -22,7 +21,7 @@ create table if not exists public.league_requests (
   created_at timestamptz not null default now()
 );
 
--- Add optional registration fields to tables created by an earlier version.
+-- Add optional fields to existing team request tables without removing submissions.
 alter table public.team_requests add column if not exists statistician text;
 alter table public.team_requests add column if not exists availability text;
 alter table public.team_requests add column if not exists home_state text;
@@ -36,7 +35,7 @@ create table if not exists public.admin_users (
   created_at timestamptz not null default now()
 );
 
--- This project admin email is the one configured for BSA. Change only if needed.
+-- The one admin email. Change this only if your Supabase Auth login uses a different email.
 insert into public.admin_users (user_id)
 select id from auth.users where lower(email) = lower('starlord_@tutamail.com')
 on conflict (user_id) do nothing;
@@ -47,7 +46,7 @@ alter table public.admin_users enable row level security;
 
 revoke all on table public.admin_users from anon, authenticated;
 grant insert on table public.team_requests, public.league_requests to anon, authenticated;
-grant select on table public.team_requests, public.league_requests to authenticated;
+grant select, update, delete on table public.team_requests, public.league_requests to authenticated;
 
 create or replace function public.is_bsa_admin()
 returns boolean
@@ -75,6 +74,10 @@ drop policy if exists "BSA public team submissions" on public.team_requests;
 drop policy if exists "BSA public league submissions" on public.league_requests;
 drop policy if exists "BSA admins read team requests" on public.team_requests;
 drop policy if exists "BSA admins read league requests" on public.league_requests;
+drop policy if exists "BSA admins update team requests" on public.team_requests;
+drop policy if exists "BSA admins update league requests" on public.league_requests;
+drop policy if exists "BSA admins delete team requests" on public.team_requests;
+drop policy if exists "BSA admins delete league requests" on public.league_requests;
 
 create policy "BSA public team submissions"
 on public.team_requests for insert to anon, authenticated
@@ -90,4 +93,22 @@ using ((select public.is_bsa_admin()));
 
 create policy "BSA admins read league requests"
 on public.league_requests for select to authenticated
+using ((select public.is_bsa_admin()));
+
+create policy "BSA admins update team requests"
+on public.team_requests for update to authenticated
+using ((select public.is_bsa_admin()))
+with check ((select public.is_bsa_admin()));
+
+create policy "BSA admins update league requests"
+on public.league_requests for update to authenticated
+using ((select public.is_bsa_admin()))
+with check ((select public.is_bsa_admin()));
+
+create policy "BSA admins delete team requests"
+on public.team_requests for delete to authenticated
+using ((select public.is_bsa_admin()));
+
+create policy "BSA admins delete league requests"
+on public.league_requests for delete to authenticated
 using ((select public.is_bsa_admin()));

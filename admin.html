@@ -9,129 +9,85 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{color-scheme:dark;--bg:#0b1020;--panel:#121a2b;--line:#26344c;--text:#f4f7ff;--muted:#aab8cf;--gold:#f2c56b;--green:#7fe0b0;--red:#ff929e}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#1d3768 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}.wrap{width:min(920px,calc(100% - 32px));margin:auto}.top{border-bottom:1px solid var(--line);padding:17px 0}.toprow{display:flex;justify-content:space-between;align-items:center;gap:14px}.brand{font-weight:950;letter-spacing:.1em}.brand b{color:var(--gold);margin-right:8px}a{color:inherit;text-decoration:none}.back{color:var(--muted)}main{padding:48px 0 70px}h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.05;letter-spacing:-.05em;margin:8px 0}.muted{color:var(--muted)}.card{padding:24px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#121a2b,#18243a);margin:18px 0}.form{display:grid;gap:13px;max-width:460px}label{display:grid;gap:6px;color:var(--muted);font-size:.9rem;font-weight:700}input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:#0b1220;color:var(--text)}button{border:0;border-radius:9px;padding:11px 16px;background:linear-gradient(135deg,#f3ce7b,#d8a745);color:#17120a;font-weight:850;cursor:pointer}button.secondary{color:var(--text);background:#ffffff12;border:1px solid var(--line)}button:disabled{opacity:.6;cursor:wait}.message{min-height:24px;color:var(--muted)}.message.error{color:var(--red)}.message.success{color:var(--green)}#dashboard{display:none}.request-list{display:grid;gap:12px}.request{padding:16px;border:1px solid var(--line);border-radius:12px;background:#ffffff06;overflow-wrap:anywhere}.request h3{margin:0 0 8px;color:var(--gold)}.request p{margin:5px 0}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.notice{padding:12px 14px;border-left:3px solid var(--gold);background:#f2c56b0c;color:var(--muted);font-size:.92rem}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.9rem}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#1d3768 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}.wrap{width:min(980px,calc(100% - 32px));margin:auto}.top{border-bottom:1px solid var(--line);padding:17px 0}.toprow{display:flex;justify-content:space-between;align-items:center;gap:14px}.brand{font-weight:950;letter-spacing:.1em}.brand b{color:var(--gold);margin-right:8px}a{color:inherit;text-decoration:none}.back{color:var(--muted)}main{padding:42px 0 70px}h1{font-size:clamp(2rem,6vw,3.2rem);line-height:1.05;letter-spacing:-.05em;margin:8px 0}.muted{color:var(--muted)}.card{padding:22px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#121a2b,#18243a);margin:18px 0}.form{display:grid;gap:13px;max-width:460px}label{display:grid;gap:6px;color:var(--muted);font-size:.88rem;font-weight:700}input,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:#0b1220;color:var(--text)}textarea{min-height:75px;resize:vertical}button{border:0;border-radius:8px;padding:10px 14px;background:linear-gradient(135deg,#f3ce7b,#d8a745);color:#17120a;font-weight:850;cursor:pointer}button.secondary{color:var(--text);background:#ffffff12;border:1px solid var(--line)}button.danger{color:#fff;background:#9e3949}button:disabled{opacity:.6;cursor:wait}.message{min-height:24px;color:var(--muted)}.message.error{color:var(--red)}.message.success{color:var(--green)}#dashboard{display:none}.request-list{display:grid;gap:15px}.request{padding:18px;border:1px solid var(--line);border-radius:13px;background:#ffffff06}.request h3{margin:0 0 6px;color:var(--gold)}.request-meta{color:var(--muted);font-size:.85rem;margin:0 0 14px}.request-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.request-fields .full{grid-column:1/-1}.request-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.notice{padding:12px 14px;border-left:3px solid var(--gold);background:#f2c56b0c;color:var(--muted);font-size:.92rem}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.9rem}@media(max-width:620px){.request-fields{grid-template-columns:1fr}.request-fields .full{grid-column:auto}.toprow{align-items:flex-start}}
   </style>
 </head>
 <body>
   <header class="top"><div class="wrap toprow"><a class="brand" href="index.html"><b>🏆</b>BSA <span class="muted">/ ADMIN</span></a><a class="back" href="index.html">← Back to BSA</a></div></header>
   <main class="wrap">
-    <p class="muted">STAFF ACCESS</p>
-    <h1>BSA Admin</h1>
-    <p class="muted">Sign in with the admin account you created in Supabase Authentication.</p>
-
-    <section class="card" id="loginPanel">
-      <h2>Admin sign-in</h2>
-      <form class="form" id="loginForm">
-        <label>Email<input id="email" type="email" autocomplete="username" required></label>
-        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
-        <button id="loginButton" type="submit">Sign in</button>
-      </form>
-      <p class="message" id="loginMessage" role="status" aria-live="polite"></p>
-    </section>
-
-    <section id="dashboard">
-      <div class="card"><div class="row"><div><h2 style="margin:0">Registration inbox</h2><p class="muted" id="signedInAs" style="margin:4px 0 0"></p></div><button class="secondary" id="signOutButton" type="button">Sign out</button></div><p class="message" id="dataMessage" role="status" aria-live="polite"></p></div>
-      <div class="request-list" id="requests"></div>
-    </section>
-
-    <aside class="notice">If sign-in works but requests cannot load, run the setup SQL in <code>supabase-admin-setup.sql</code> after creating your Supabase Auth user and replacing the email placeholder in that file. Never put a Supabase secret/service-role key or your password in this page.</aside>
+    <p class="muted">STAFF ACCESS</p><h1>BSA Admin</h1><p class="muted">Sign in to review, edit, or remove registrations.</p>
+    <section class="card" id="loginPanel"><h2>Admin sign-in</h2><form class="form" id="loginForm"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button id="loginButton" type="submit">Sign in</button></form><p class="message" id="loginMessage" role="status" aria-live="polite"></p></section>
+    <section id="dashboard"><div class="card"><div class="row"><div><h2 style="margin:0">Registration inbox</h2><p class="muted" id="signedInAs" style="margin:4px 0 0"></p></div><div class="request-actions"><button class="secondary" id="refreshButton" type="button">Refresh inbox</button><button class="secondary" id="signOutButton" type="button">Sign out</button></div></div><p class="message" id="dataMessage" role="status" aria-live="polite"></p></div><div class="request-list" id="requests"></div></section>
+    <aside class="notice">Only use this admin page on the BSA website. Changes save to Supabase. Email submissions sent before the website form was connected are only in your email and will not appear here automatically.</aside>
   </main>
   <footer><div class="wrap">BSA · Bloxd Sporting Association</div></footer>
   <script>
-    // Publishable keys are intended for browser use. Database access is controlled by Supabase RLS policies.
-    const SUPABASE_URL = "https://hxyaixaarceykrqfford.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    const byId = id => document.getElementById(id);
-
-    function setMessage(id, text, kind = "") {
-      const node = byId(id);
-      node.textContent = text;
-      node.className = `message ${kind}`.trim();
+    const SUPABASE_URL="https://hxyaixaarceykrqfford.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY="sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
+    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    const $=id=>document.getElementById(id);
+    const definitions={
+      team_requests:{title:"Team registration",fields:[
+        ["Team name","team_name"],["Leader / Captain","captain_name"],["League","league"],["Statistician","statistician"],["Players","players","textarea"],["Availability","availability"],["Home state","home_state"],["Team colors","team_colors"],["Team anthem","team_anthem"],["Fan interactive?","fan_interactive"],["Additional notes","notes","textarea"]
+      ]},
+      league_requests:{title:"League proposal",fields:[["League name","league_name"],["Game","game"],["Organizer","organizer"],["Contact email","contact_email"],["Details","details","textarea"]]}
+    };
+    function message(id,text,type=""){const node=$(id);node.textContent=text;node.className=`message ${type}`.trim();}
+    function makeField(label,key,value,multiline){const wrapper=document.createElement("label");wrapper.textContent=label;const input=document.createElement(multiline?"textarea":"input");input.name=key;input.value=value==null?"":String(value);wrapper.appendChild(input);return wrapper;}
+    function renderCard(table,item){
+      const def=definitions[table],card=document.createElement("article");card.className="request";card.dataset.table=table;card.dataset.id=item.id;
+      const heading=document.createElement("h3");heading.textContent=def.title;card.appendChild(heading);
+      const meta=document.createElement("p");meta.className="request-meta";meta.textContent=`Request #${item.id} · Received ${item.created_at?new Date(item.created_at).toLocaleString():"date unavailable"}`;card.appendChild(meta);
+      const fields=document.createElement("div");fields.className="request-fields";
+      for(const[label,key,type]of def.fields){const field=makeField(label,key,item[key],type==="textarea");if(type==="textarea"||key==="players"||key==="notes"||key==="details")field.classList.add("full");fields.appendChild(field);}
+      card.appendChild(fields);
+      const actions=document.createElement("div");actions.className="request-actions";
+      const save=document.createElement("button");save.type="button";save.textContent="Save changes";save.addEventListener("click",()=>saveCard(card));
+      const remove=document.createElement("button");remove.type="button";remove.className="danger";remove.textContent="Delete request";remove.addEventListener("click",()=>deleteCard(card));
+      actions.append(save,remove);card.appendChild(actions);return card;
     }
-
-    function addText(parent, tag, text) {
-      const node = document.createElement(tag);
-      node.textContent = text == null || text === "" ? "—" : String(text);
-      parent.appendChild(node);
-      return node;
+    async function loadRequests(){
+      message("dataMessage","Loading requests…");$("requests").replaceChildren();
+      const results=await Promise.all([client.from("team_requests").select("*").order("created_at",{ascending:false}),client.from("league_requests").select("*").order("created_at",{ascending:false})]);
+      if(results.some(result=>result.error)){
+        console.error("Inbox load error:",results.map(result=>result.error).filter(Boolean));
+        message("dataMessage","Could not load requests. Run the latest supabase-admin-setup.sql and verify your signed-in email is the admin email in that SQL.","error");return;
+      }
+      const list=$("requests");
+      for(const item of results[0].data||[])list.appendChild(renderCard("team_requests",item));
+      for(const item of results[1].data||[])list.appendChild(renderCard("league_requests",item));
+      message("dataMessage",list.children.length?`${list.children.length} request(s). Edit fields and choose Save changes, or delete a request.`:"No website submissions yet. New submissions will appear here.","success");
     }
-
-    function addRequestCard(type, item, fields) {
-      const card = document.createElement("article");
-      card.className = "request";
-      addText(card, "h3", type);
-      if (item.created_at) addText(card, "p", `Received: ${new Date(item.created_at).toLocaleString()}`);
-      for (const [label, key] of fields) addText(card, "p", `${label}: ${item[key]}`);
-      return card;
+    async function saveCard(card){
+      const table=card.dataset.table,payload={};
+      for(const field of card.querySelectorAll(".request-fields [name]"))payload[field.name]=field.value.trim();
+      const buttons=card.querySelectorAll("button");buttons.forEach(button=>button.disabled=true);
+      const {error}=await client.from(table).update(payload).eq("id",card.dataset.id);
+      buttons.forEach(button=>button.disabled=false);
+      if(error){console.error("Save request error:",error);message("dataMessage","Could not save changes. Run the latest setup SQL to enable admin edits, then refresh this page.","error");return;}
+      message("dataMessage","Changes saved.","success");
     }
-
-    async function loadRequests() {
-      setMessage("dataMessage", "Loading requests…");
-      const [teams, leagues] = await Promise.all([
-        client.from("team_requests").select("*").order("created_at", { ascending: false }),
-        client.from("league_requests").select("*").order("created_at", { ascending: false })
-      ]);
-      const list = byId("requests");
-      list.replaceChildren();
-      if (teams.error || leagues.error) {
-        setMessage("dataMessage", "Could not load requests. Confirm this user is listed as an admin and the Supabase setup SQL completed.", "error");
-        return;
-      }
-      for (const item of teams.data || []) {
-        list.appendChild(addRequestCard("Team registration", item, [["Team", "team_name"], ["Captain", "captain_name"], ["League", "league"], ["Players", "players"], ["Statistician", "statistician"], ["Availability", "availability"], ["Home state", "home_state"], ["Team colors", "team_colors"], ["Anthem", "team_anthem"], ["Fan interactive", "fan_interactive"], ["Notes", "notes"]]));
-      }
-      for (const item of leagues.data || []) {
-        list.appendChild(addRequestCard("League proposal", item, [["League", "league_name"], ["Game", "game"], ["Organizer", "organizer"], ["Contact email", "contact_email"], ["Details", "details"]]));
-      }
-      setMessage("dataMessage", list.children.length ? `${list.children.length} request(s) loaded.` : "No requests have been submitted yet.", "success");
+    async function deleteCard(card){
+      if(!confirm(`Delete request #${card.dataset.id}? This cannot be undone.`))return;
+      const buttons=card.querySelectorAll("button");buttons.forEach(button=>button.disabled=true);
+      const {error}=await client.from(card.dataset.table).delete().eq("id",card.dataset.id);
+      if(error){console.error("Delete request error:",error);buttons.forEach(button=>button.disabled=false);message("dataMessage","Could not delete this request. Run the latest setup SQL to enable admin changes.","error");return;}
+      card.remove();message("dataMessage","Request deleted.","success");
     }
-
-    async function showSession(session) {
-      const signedIn = Boolean(session);
-      byId("loginPanel").style.display = signedIn ? "none" : "block";
-      byId("dashboard").style.display = "block";
-      if (!signedIn) {
-        byId("dashboard").style.display = "none";
-        return;
-      }
-      byId("signedInAs").textContent = `Signed in as ${session.user.email || "authorized user"}`;
-      await loadRequests();
+    async function showSession(session){
+      const signedIn=Boolean(session);$("loginPanel").style.display=signedIn?"none":"block";$("dashboard").style.display=signedIn?"block":"none";
+      if(signedIn){$("signedInAs").textContent=`Signed in as ${session.user.email||"account"}`;await loadRequests();}
     }
-
-    byId("loginForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      const button = byId("loginButton");
-      button.disabled = true;
-      setMessage("loginMessage", "Signing in…");
-      const { data, error } = await client.auth.signInWithPassword({
-        email: byId("email").value.trim(),
-        password: byId("password").value
-      });
-      button.disabled = false;
-      if (error) {
-        setMessage("loginMessage", "Sign-in failed. Check the email and password, and confirm the account exists in Supabase Auth.", "error");
-        return;
-      }
-      byId("password").value = "";
-      setMessage("loginMessage", "Signed in.", "success");
-      await showSession(data.session);
+    $("loginForm").addEventListener("submit",async event=>{
+      event.preventDefault();const button=$("loginButton");button.disabled=true;message("loginMessage","Signing in…");
+      const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});button.disabled=false;
+      if(error){console.error("Sign-in error:",error);message("loginMessage","Sign-in failed. Check your Supabase Auth email and password.","error");return;}
+      $("password").value="";message("loginMessage","Signed in.","success");await showSession(data.session);
     });
-
-    byId("signOutButton").addEventListener("click", async () => {
-      await client.auth.signOut();
-      byId("loginForm").reset();
-      setMessage("loginMessage", "You are signed out.");
-      showSession(null);
-    });
-
-    client.auth.getSession().then(({ data, error }) => {
-      if (error) setMessage("loginMessage", "Could not check the saved session. Please sign in again.", "error");
-      showSession(data?.session || null);
-    });
-    client.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") showSession(null);
-    });
+    $("signOutButton").addEventListener("click",async()=>{await client.auth.signOut();$("loginForm").reset();showSession(null);message("loginMessage","You are signed out.");});
+    $("refreshButton").addEventListener("click",loadRequests);
+    client.auth.getSession().then(({data,error})=>{if(error)message("loginMessage","Could not check the saved session. Please sign in again.","error");showSession(data?.session||null);});
+    client.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT")showSession(null);});
   </script>
 </body>
 </html>
