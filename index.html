@@ -169,6 +169,7 @@
   <footer><div class="container">BSA · Bloxd Sporting Association</div></footer>
 
   <script>
+    const BSA_CONTACT_EMAIL = "starlord_@tutamail.com";
     const PROFILE_STORAGE_KEY = "bsa-player-profile";
 
     function updateProfile(profile) {
@@ -201,12 +202,27 @@
       document.getElementById("profileMessage").textContent = "Profile saved on this browser.";
     });
 
-    for (const formId of ["teamForm", "leagueForm"]) {
-      document.getElementById(formId).addEventListener("submit", event => {
-        event.preventDefault();
-        event.currentTarget.querySelector(".message").textContent = "This form is not connected yet. Your request was not sent.";
-      });
-    }
+    document.getElementById("teamForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const body = [...formData.entries()].map(([key, value]) => `${key}: ${value || "—"}`).join("\n");
+      const subject = encodeURIComponent("BSA team registration");
+      const mailto = `mailto:${encodeURIComponent(BSA_CONTACT_EMAIL)}?subject=${subject}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+      form.querySelector(".message").textContent = "Your email app should open with the registration details.";
+    });
+
+    document.getElementById("leagueForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const body = [...formData.entries()].map(([key, value]) => `${key}: ${value || "—"}`).join("\n");
+      const subject = encodeURIComponent("BSA league registration");
+      const mailto = `mailto:${encodeURIComponent(BSA_CONTACT_EMAIL)}?subject=${subject}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+      form.querySelector(".message").textContent = "Your email app should open with the registration details.";
+    });
   </script>
 </body>
 </html>
