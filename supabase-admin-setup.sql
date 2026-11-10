@@ -21,7 +21,7 @@ create table if not exists public.league_requests (
   created_at timestamptz not null default now()
 );
 
--- Add optional fields to existing team request tables without removing submissions.
+-- Add fields to existing tables created by earlier setup versions.
 alter table public.team_requests add column if not exists statistician text;
 alter table public.team_requests add column if not exists availability text;
 alter table public.team_requests add column if not exists home_state text;
@@ -29,6 +29,13 @@ alter table public.team_requests add column if not exists team_colors text;
 alter table public.team_requests add column if not exists team_anthem text;
 alter table public.team_requests add column if not exists fan_interactive text;
 alter table public.team_requests add column if not exists notes text;
+
+-- The league_requests table may predate the current website form. Add its expected fields.
+alter table public.league_requests add column if not exists league_name text;
+alter table public.league_requests add column if not exists game text;
+alter table public.league_requests add column if not exists organizer text;
+alter table public.league_requests add column if not exists contact_email text;
+alter table public.league_requests add column if not exists details text;
 
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
@@ -112,3 +119,6 @@ using ((select public.is_bsa_admin()));
 create policy "BSA admins delete league requests"
 on public.league_requests for delete to authenticated
 using ((select public.is_bsa_admin()));
+
+-- Ask PostgREST to refresh its API schema cache after these migrations.
+notify pgrst, 'reload schema';
