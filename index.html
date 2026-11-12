@@ -1,1 +1,100 @@
-    <section class="section wrap" id="legends"><h2>Hall of Legends</h2><p class="section-intro">Founding Legends</p><div class="legends"><article class="card"><h3>Legend Slayer</h3><p>The best bedwars player and friend.</p></article></div></section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BSA is the home of Bloxd competition. Meet founding teams, follow the season, and register.">
+  <meta name="theme-color" content="#0b1020">
+  <title>BSA — Bloxd Sporting Association</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--surface:#121a2b;--surface2:#18243a;--line:#26344c;--text:#f4f7ff;--muted:#aab8cf;--gold:#f2c56b;--green:#7fe0b0;--max:1180px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:95px}body{margin:0;background:radial-gradient(ellipse at 75% -10%,#1d3768 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input,select,textarea{font:inherit}a{color:inherit;text-decoration:none}.wrap{width:min(var(--max),calc(100% - 32px));margin:auto}.topbar{position:sticky;top:0;z-index:5;background:#090e1bf2;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.toprow{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{white-space:nowrap;font-weight:900;letter-spacing:.1em}.brand b{color:var(--gold);font-size:1.3rem;margin-right:8px}.nav-scroll{overflow:auto;flex:1}.nav{display:flex;gap:4px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.nav a{font-size:.84rem;color:var(--muted);padding:8px 10px;border-radius:8px}.nav a:hover{color:var(--text);background:#ffffff12}.search-wrap{position:relative;min-width:190px}.search-wrap input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#111b2d;color:var(--text)}.search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:8;background:#141e30;border:1px solid var(--line);border-radius:10px;overflow:hidden}.search-results a{display:block;padding:10px 12px;color:var(--muted)}.search-results a:hover{background:#ffffff12;color:var(--text)}.hero{padding:82px 0 42px;text-align:center;background:radial-gradient(ellipse at 50% 20%,#2b4980 0,transparent 55%)}.eyebrow{color:var(--gold);font-size:.76rem;font-weight:850;letter-spacing:.2em;text-transform:uppercase}.hero h1{font-size:clamp(2.8rem,8vw,5.8rem);line-height:.98;letter-spacing:-.06em;margin:16px 0}.hero p{max-width:720px;margin:18px auto 0;color:var(--muted);font-size:1.1rem}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-block;border:0;border-radius:10px;padding:12px 18px;background:linear-gradient(135deg,#f3ce7b,#d8a745);color:#17120a;font-weight:850;cursor:pointer}.btn.ghost{color:var(--text);background:#ffffff12;border:1px solid var(--line)}.btn:disabled{opacity:.6;cursor:wait}.tag{display:inline-block;border:1px solid #f2c56b55;border-radius:999px;padding:3px 8px;color:var(--gold);font-size:.73rem;font-weight:800;text-transform:uppercase}.section{padding:48px 0}.section h2{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 8px}.section-intro{color:var(--muted);margin:0 0 24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{padding:20px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,var(--surface),var(--surface2))}.card h3{margin:0 0 8px}.card p{color:var(--muted);margin:8px 0}.league-card,.team-card{display:flex;flex-direction:column;gap:8px}.league-mark,.crest{font-size:1.8rem}.team-card a{display:inline-block;margin-top:4px;color:var(--gold);font-weight:700}.hidden{display:none!important}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}.standings{width:100%;border-collapse:collapse;min-width:620px;background:#10192a}.standings th,.standings td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}.standings th{color:var(--gold);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}.standings td a{font-weight:700}.weeks,.anthem-list,.legends,.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.week,.anthem,.news-card{padding:14px;border:1px solid var(--line);border-radius:12px;background:#ffffff06}.week b{display:block;color:var(--gold);margin-bottom:4px}.anthem b{display:block;color:var(--gold)}.anthem small{color:var(--muted)}.news-date{color:var(--gold);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.form-grid label{display:grid;gap:6px;color:var(--muted);font-weight:700}.form-grid .full{grid-column:1/-1}.form-grid input,.form-grid select,.form-grid textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#0b1220;color:var(--text)}.form-grid textarea{min-height:100px;resize:vertical}.message{min-height:24px;color:var(--muted)}.message.error{color:#ff929e}.message.success{color:var(--green)}.footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted)}@media(max-width:900px){.toprow{flex-wrap:wrap;padding:9px 0}.nav-scroll{order:3;flex-basis:100%}.nav{justify-content:flex-start}}@media(max-width:620px){.hero{padding:60px 0 30px}.section{padding:36px 0}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.search-wrap{min-width:150px;flex:1}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="wrap toprow">
+    <a class="brand" href="#home"><b>🏆</b>BSA</a>
+    <div class="nav-scroll"><nav class="nav" aria-label="Main navigation">
+      <a href="#home">Home</a><a href="#leagues">Leagues</a><a href="#leagues">Teams</a><a href="#leagues">Standings</a><a href="#legends">Hall of Legends</a><a href="#community">Community</a><a href="#news">News</a><a href="#register">Register</a><a href="player-profiles.html">Player Profiles</a><a href="admin.html">Admin</a>
+    </nav></div>
+    <div class="search-wrap"><input id="leagueSearch" type="search" placeholder="Search leagues" aria-label="Search leagues"><div id="searchResults" class="search-results" hidden></div></div>
+  </div></header>
+  <main>
+    <section class="hero" id="home"><div class="wrap"><div class="eyebrow">The home of Bloxd competition</div><h1>One Association.<br>Every Rivalry.</h1><p>BSA brings players, teams, and fans together. Follow the flagship BedWars League Championship and help write the first chapter.</p><div class="actions"><a class="btn" href="#register">How do I join BSA?</a><a class="btn ghost" href="#leagues">Explore BSA leagues</a></div><p><span class="tag">BLC · FLAGSHIP LEAGUE</span></p></div></section>
+
+    <section class="section wrap" id="leagues"><h2>Leagues of BSA</h2><p class="section-intro">One parent organization, with room for new competitions. Open BLC to view its teams, standings, season schedule, and anthems.</p><div class="grid" id="leagueGrid"></div></section>
+
+    <section class="section wrap hidden" id="teams"><h2>Founding Teams</h2><p class="section-intro">Meet the eight clubs opening the BSA era.</p><div class="grid" id="teamGrid"></div></section>
+    <section class="section wrap hidden" id="standings"><h2>BLC Standings</h2><p class="section-intro">Season 1 standings are provisional; results will be updated as matches are played.</p><div class="table-wrap"><table class="standings"><thead><tr><th>Rank</th><th>Team</th><th>Wins</th><th>Losses</th><th>W-L</th><th>Playoff position</th></tr></thead><tbody id="standingsBody"></tbody></table></div></section>
+    <section class="section wrap hidden" id="schedule"><h2>BLC Season 1</h2><p class="section-intro">August 2 · The Gates Open</p><div class="weeks"><div class="week"><b>Week 1</b>Regular Season</div><div class="week"><b>Week 2</b>Regular Season</div><div class="week"><b>Week 3</b>Regular Season</div><div class="week"><b>Week 4</b>Regular Season</div><div class="week"><b>Week 5</b>Funday</div><div class="week"><b>Week 6</b>Community Week</div><div class="week"><b>Week 7</b>Quarterfinals</div><div class="week"><b>Week 8</b>Semifinals</div><div class="week"><b>Week 9</b><a href="void-crown.html">Void Crown Championship</a></div></div></section>
+    <section class="section wrap hidden" id="anthems"><h2>Team Anthems</h2><p class="section-intro">Official songs of the founding teams.</p><div class="anthem-list" id="anthemList"></div></section>
+
+    <section class="section wrap" id="community"><h2>Community Week</h2><p class="section-intro">Fan voting categories — nominees and voting will be announced soon.</p><div class="grid"><article class="card">🏆 Fan Favorite Team</article><article class="card">🌟 Fan Favorite Player</article><article class="card">🎵 Team Anthem of the Year</article><article class="card">🎬 Play of the Year</article><article class="card">⚔️ Clutch of the Year</article><article class="card">🤝 Rivalry of the Year</article></div></section>
+
+    <section class="section wrap" id="legends"><h2>Hall of Legends</h2><p class="section-intro">Founding Legends</p><div class="legends"><article class="card"><h3>Legend Slayer</h3><p>The best bedwars player and friend.</p></article><article class="card"><h3>StarLord Hastings</h3><p>Founding legend · BSA</p></article><article class="card"><h3>Nile</h3><p>Founding legend · Kings of Mid captain</p></article><article class="card"><h3>Future Champions</h3><p>Season champions will be enshrined here.</p></article><article class="card"><h3>Future MVPs</h3><p>Outstanding players will earn their place.</p></article></div></section>
+
+    <section class="section wrap" id="news"><h2>BSA News</h2><p class="section-intro">Announcements from across the association.</p><div class="news-grid"><article class="card news-card"><div class="news-date">BSA announcement</div><h3>BSA Website Launch</h3><p>Welcome to the official home of the Bloxd Sporting Association.</p></article><article class="card news-card"><div class="news-date">Season 1</div><h3>Season One Announced</h3><p>The inaugural BedWars League Championship is on the horizon.</p></article><article class="card news-card"><div class="news-date">Championship</div><h3>Void Crown Championship Planned</h3><p>The season final will decide who claims BLC’s highest honor.</p></article></div></section>
+
+    <section class="section wrap" id="register"><h2>Join the competition</h2><p class="section-intro">Submit a team registration or propose a new BSA league.</p>
+      <div class="card"><h3>Team registration</h3><form id="teamForm" class="form-grid">
+        <label>Team Name<input name="team_name" required maxlength="60"></label><label>Leader / Captain<input name="captain_name" required maxlength="60"></label><label>Statistician<input name="statistician" maxlength="60"></label>
+        <label>League<select name="league" required><option value="">Choose league</option><option value="BLC">BLC — BedWars League Championship</option><option value="BFC">BFC — Fight Championship (upcoming)</option><option value="BBC">BBC — Build Championship (upcoming)</option><option value="BRC">BRC — Racing Championship (upcoming)</option></select></label>
+        <label class="full">Players<textarea name="players" placeholder="List your players"></textarea></label><label>Availability<input name="availability" placeholder="Practice / match availability"></label><label>Home State<input name="home_state" maxlength="60"></label><label>Team Colors<input name="team_colors" maxlength="80" placeholder="e.g. navy and gold"></label><label>Team Anthem<input name="team_anthem" maxlength="100"></label><label>Fan Interactive?<select name="fan_interactive"><option value="Yes">Yes</option><option value="No">No</option></select></label><label class="full">Additional Notes<textarea name="notes"></textarea></label><div class="full"><button class="btn" id="submitTeam" type="submit">Submit team registration</button><div class="message" id="teamMessage" role="status" aria-live="polite"></div></div>
+      </form></div>
+      <div class="card" style="margin-top:18px"><h3>Propose a new BSA league</h3><p class="section-intro">Proposals go into the admin inbox after you submit this form.</p><form id="leagueForm" class="form-grid"><label>League name<input name="league_name" required maxlength="80" placeholder="e.g. Skywars Championship"></label><label>Game / competition type<input name="game" required maxlength="80" placeholder="e.g. Skywars"></label><label>Organizer name<input name="organizer" required maxlength="80"></label><label>Contact email<input name="contact_email" type="email" required maxlength="254"></label><label class="full">Proposal details<textarea name="details" required maxlength="3000" placeholder="Describe the league, format, teams, and what support you need."></textarea></label><div class="full"><button class="btn" id="submitLeague" type="submit">Submit league proposal</button><div class="message" id="leagueMessage" role="status" aria-live="polite"></div></div></form></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="wrap">🏆 BSA · Bloxd Sporting Association · <a href="admin.html">Admin sign-in</a> · <a href="void-crown.html">The Void Crown</a> · <a href="player-profiles.html">Player Profiles</a></div></footer>
+  <script>
+    const SUPABASE_URL="https://hxyaixaarceykrqfford.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY="sb_publishable_dY1BtBdmncJbIRH2nwPMJQ_C6xlyuER";
+    const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    const TEAMS=[
+      {slug:'cce',name:'CCE',emoji:'🛡️',anthem:'Hold The Line',known:'Teamwork and Adaptation',captain:'Legend Slayer'},
+      {slug:'kings-of-mid',name:'Kings of Mid',emoji:'👑',anthem:'Kings of Mid',known:'Moonstone Control',captain:'Nile'},
+      {slug:'phoenix-core',name:'Phoenix Core',emoji:'🔥',anthem:'Burn Again',known:'Explosives',captain:'To be announced'},
+      {slug:'iron-division',name:'Iron Division',emoji:'⚔️',anthem:'Steel Command',known:'Discipline and Tactics',captain:'To be announced'},
+      {slug:'crimson-rush',name:'Crimson Rush',emoji:'🔴',anthem:'Red Horizon',known:'Power Rushes',captain:'To be announced'},
+      {slug:'stormbreak',name:'Stormbreak',emoji:'🌊',anthem:'Ride The Storm',known:'Speed',captain:'To be announced'},
+      {slug:'void-hunters',name:'Void Hunters',emoji:'🌑',anthem:'Into The Void',known:'Void Fighting',captain:'To be announced'},
+      {slug:'skyfall',name:'Skyfall',emoji:'⚡',anthem:'Touch The Sky',known:'Height Advantage',captain:'To be announced'}
+    ];
+    const LEAGUES=[
+      {abbr:'BLC',name:'BedWars League Championship',desc:'The flagship league. Eight founding teams compete for the Void Crown.',icon:'🛏️',status:'FLAGSHIP',keywords:'bedwars bed wars'},
+      {abbr:'BFC',name:'Fight Championship',desc:'A future BSA competition built around combat.',icon:'⚔️',status:'COMING SOON',keywords:'fight combat'},
+      {abbr:'BBC',name:'Build Championship',desc:'A future stage for builders and creators.',icon:'🏗️',status:'COMING SOON',keywords:'build builder'},
+      {abbr:'BRC',name:'Racing Championship',desc:'A future league for speed and close finishes.',icon:'🏁',status:'COMING SOON',keywords:'racing race speed'}
+    ];
+    const $=id=>document.getElementById(id);
+    const BLC_SECTIONS=['teams','standings','schedule','anthems'];
+    function setBLCVisible(visible,scroll=true){
+      BLC_SECTIONS.forEach(id=>$(id).classList.toggle('hidden',!visible));
+      document.querySelectorAll('.league-button[data-league="BLC"]').forEach(button=>{button.textContent=visible?'Hide BLC':'Open BLC';button.setAttribute('aria-expanded',String(visible));});
+      if(scroll&&visible)$('teams').scrollIntoView({behavior:'smooth',block:'start'});
+      if(scroll&&!visible)$('leagues').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    function toggleBLC(){setBLCVisible($('teams').classList.contains('hidden'));}
+    function renderLeagues(){
+      $('leagueGrid').innerHTML=LEAGUES.map(league=>`<article class="card league-card"><div class="league-mark">${league.icon}</div><h3>${league.abbr} · ${league.name}</h3><p>${league.desc}</p><p><span class="tag">${league.status}</span></p><button class="btn ghost league-button" type="button" data-league="${league.abbr}" aria-expanded="false">Open ${league.abbr}</button></article>`).join('');
+      document.querySelectorAll('.league-button').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.league==='BLC')toggleBLC();}));
+    }
+    $('teamGrid').innerHTML=TEAMS.map(team=>`<article class="card team-card"><div class="crest">${team.emoji}</div><h3>${team.name}</h3><p><b>Known for:</b> ${team.known}</p><p><b>Captain:</b> ${team.captain}</p><a href="team.html?team=${encodeURIComponent(team.slug)}">View team →</a></article>`).join('');
+    $('standingsBody').innerHTML=TEAMS.map((team,index)=>`<tr><td>${index+1}</td><td><a href="team.html?team=${encodeURIComponent(team.slug)}">${team.emoji} ${team.name}</a></td><td>—</td><td>—</td><td>—</td><td>To be determined</td></tr>`).join('');
+    $('anthemList').innerHTML=TEAMS.map(team=>`<div class="anthem"><b>${team.anthem}</b><small>${team.name} · official team anthem</small></div>`).join('');
+    const search=$('leagueSearch'),results=$('searchResults');
+    search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();if(!query){results.hidden=true;return;}const matches=LEAGUES.filter(league=>`${league.abbr} ${league.name} ${league.desc} ${league.keywords}`.toLowerCase().includes(query));results.innerHTML=matches.map(league=>`<a href="#leagues">${league.abbr} · ${league.name}</a>`).join('');results.hidden=matches.length===0;});
+    document.addEventListener('click',event=>{if(!event.target.closest('.search-wrap'))results.hidden=true;});
+    async function submitToTable(event,table,buttonId,messageId,makePayload,successText){
+      event.preventDefault();const button=$(buttonId);button.disabled=true;button.textContent='Submitting…';const message=$(messageId);message.className='message';message.textContent='Submitting…';const form=event.currentTarget;const payload=makePayload(new FormData(form));
+      try{const {error}=await db.from(table).insert(payload);if(error)throw error;form.reset();message.textContent=successText;message.className='message success';}
+      catch(error){console.error(`${table} submission error:`,error);message.textContent='Could not submit right now. Please try again later or contact BSA staff.';message.className='message error';}
+      finally{button.disabled=false;button.textContent=table==='team_requests'?'Submit team registration':'Submit league proposal';}
+    }
+    $('teamForm').addEventListener('submit',event=>submitToTable(event,'team_requests','submitTeam','teamMessage',form=>({team_name:form.get('team_name').trim(),captain_name:form.get('captain_name').trim(),league:form.get('league').trim(),statistician:form.get('statistician')?.trim()||'',players:form.get('players')?.trim()||'',availability:form.get('availability')?.trim()||'',home_state:form.get('home_state')?.trim()||'',team_colors:form.get('team_colors')?.trim()||'',team_anthem:form.get('team_anthem')?.trim()||'',fan_interactive:form.get('fan_interactive')?.trim()||'',notes:form.get('notes')?.trim()||''}),'Team registration submitted successfully.'));
+    $('leagueForm').addEventListener('submit',event=>submitToTable(event,'league_requests','submitLeague','leagueMessage',form=>({league_name:form.get('league_name').trim(),game:form.get('game').trim(),organizer:form.get('organizer').trim(),contact_email:form.get('contact_email').trim(),details:form.get('details').trim()}),'League proposal submitted successfully. BSA staff can review it in the admin inbox.'));
+    setBLCVisible(false,false);
+    renderLeagues();
+  </script>
+</body>
+</html>
