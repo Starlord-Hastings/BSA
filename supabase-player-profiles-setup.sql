@@ -1,11 +1,13 @@
 -- Public BSA player profiles with owner-managed profile fields and public statistics.
--- Run this once in the Supabase SQL Editor for the BSA project.
+-- Safe to run again after future schema changes; existing profiles are preserved.
 
 create table if not exists public.player_profiles (
   user_id uuid primary key references auth.users(id) on delete cascade,
   display_name text not null check (char_length(display_name) between 1 and 60),
   team text not null default '',
   league text not null default 'BLC',
+  favorite_league text not null default '',
+  good_at text not null default '',
   role text not null default 'Player' check (role in ('Captain','Player','Coach','Statistician','Commentator','League Official')),
   joined_season text not null default 'Season 1',
   state text not null default '',
@@ -25,9 +27,12 @@ create table if not exists public.player_profiles (
   updated_at timestamptz not null default now()
 );
 
+-- Migrate installations that already have the first version of profiles.
+alter table public.player_profiles add column if not exists favorite_league text not null default '';
+alter table public.player_profiles add column if not exists good_at text not null default '';
+
 alter table public.player_profiles enable row level security;
 
--- Everyone can view published profiles. Logged-in owners may create and edit their own.
 drop policy if exists "Anyone can view player profiles" on public.player_profiles;
 drop policy if exists "Players create their own profile" on public.player_profiles;
 drop policy if exists "Players update their own profile" on public.player_profiles;
@@ -44,11 +49,11 @@ with check ((select auth.uid()) = user_id);
 
 grant select on public.player_profiles to anon, authenticated;
 revoke insert, update, delete on public.player_profiles from anon, authenticated;
--- Players can edit identity, team/role, location, status and fan preferences.
--- Stats, achievements and team history are deliberately not writable from the public website.
-grant insert (user_id, display_name, team, league, role, joined_season, state, status, favorite_team, favorite_player, favorite_anthem)
+-- Public users may view profiles; signed-in owners can edit only profile details.
+-- Official stats, achievements, and history remain staff-managed and are not granted here.
+grant insert (user_id, display_name, team, league, favorite_league, good_at, role, joined_season, state, status, favorite_team, favorite_player, favorite_anthem)
 on public.player_profiles to authenticated;
-grant update (display_name, team, league, role, joined_season, state, status, favorite_team, favorite_player, favorite_anthem, updated_at)
+grant update (display_name, team, league, favorite_league, good_at, role, joined_season, state, status, favorite_team, favorite_player, favorite_anthem, updated_at)
 on public.player_profiles to authenticated;
 
 create or replace function public.touch_player_profile_updated_at()
