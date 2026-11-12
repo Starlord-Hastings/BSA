@@ -37,6 +37,15 @@ alter table public.league_requests add column if not exists organizer text;
 alter table public.league_requests add column if not exists contact_email text;
 alter table public.league_requests add column if not exists details text;
 
+-- Older versions used these columns and may have made them NOT NULL. They are
+-- legacy fields; the current form writes to game/contact_email/details instead.
+alter table public.league_requests add column if not exists game_name text;
+alter table public.league_requests add column if not exists email text;
+alter table public.league_requests add column if not exists notes text;
+alter table public.league_requests alter column game_name drop not null;
+alter table public.league_requests alter column email drop not null;
+alter table public.league_requests alter column notes drop not null;
+
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
