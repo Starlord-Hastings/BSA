@@ -222,16 +222,19 @@
 
     const $=id=>document.getElementById(id);
     function setFormMessage(id,text,error=false){$(id).textContent=text;$(id).className=`message ${error ? 'error' : ''}`.trim();}
+
+    function toggleStandings(show){
+      const standings=document.getElementById('standings');
+      if(!standings) return;
+      standings.classList.toggle('hidden', !show);
+      if(show) standings.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
     function renderLeagueGrid(){
       $('leagueGrid').innerHTML=LEAGUES.map(l=>`<article class="card league-card" data-league="${l.abbr}"><div class="league-mark">${l.icon}</div><h3>${l.abbr} · ${l.name}</h3><p>${l.desc}</p><p><span class="tag">${l.status}</span></p><button class="btn ghost league-button" type="button" data-league="${l.abbr}">Open ${l.abbr}</button></article>`).join('');
       document.querySelectorAll('.league-button').forEach(button=>{
         button.addEventListener('click',()=>{
-          const league=button.dataset.league;
-          if(league==='BLC'){
-            const standingsSection=document.getElementById('standings');
-            standingsSection.classList.remove('hidden');
-            standingsSection.scrollIntoView({behavior:'smooth',block:'start'});
-          }
+          if(button.dataset.league === 'BLC') toggleStandings(true);
         });
       });
     }
@@ -247,16 +250,23 @@
       if(!q){results.hidden=true;return;}
       const found=LEAGUES.filter(l=>`${l.abbr} ${l.name} ${l.desc} ${l.keywords}`.toLowerCase().includes(q));
       results.innerHTML=found.map(l=>`<a href="#leagues" data-league="${l.abbr}">${l.abbr} · ${l.name}</a>`).join('');
-      results.hidden = found.length === 0;
+      results.hidden=found.length === 0;
       results.querySelectorAll('a').forEach(link=>{
-        link.addEventListener('click',()=>{
-          const league=link.dataset.league;
-          if(league==='BLC') document.getElementById('standings').classList.remove('hidden');
-          results.hidden=true;search.value='';
+        link.addEventListener('click',e=>{
+          e.preventDefault();
+          if(link.dataset.league === 'BLC') toggleStandings(true);
+          results.hidden=true; search.value='';
         });
       });
     });
-    document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))results.hidden=true;});
+
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.search-wrap')) results.hidden=true;
+      if(e.target.closest('a[href="#standings"]')) {
+        e.preventDefault();
+        toggleStandings(true);
+      }
+    });
 
     async function submitToTable(event,table,buttonId,messageId,makePayload,successText){
       event.preventDefault();
@@ -300,6 +310,7 @@
       }
     } catch(err){}
 
+    toggleStandings(false);
     renderLeagueGrid();
   </script>
 </body>
